@@ -50,6 +50,7 @@ graph TB
 
 ### Approved WBCSs
 
+<!--BEGIN INDEX-->
 | **WBCS #** | **WBCS Title**                                                                         |
 | -------- | ------------------------------------------------------------------------------------ |
 | CS-001   | [Credential Issuance - v1.1](cs-01-credential-issuance.md)         |
@@ -57,6 +58,8 @@ graph TB
 | CS-003   | [Remote Qualified Signing with Wallet Units - v1.0](cs-03-remote-signing-with-wallet-units.md) |
 | CS-004   | [Individual Wallet Unit Attestation (WUA) Lifecycle - v1.0](cs-04-wua-lifecycle.md) |
 | CS-005   | [Business Wallet Unit Attestation (BWUA) Lifecycle - v1.0](cs-05-bwua-lifecycle.md) |
+
+<!--END INDEX-->
 
 ### WBCSs Under Development
 
