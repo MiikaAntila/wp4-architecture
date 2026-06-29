@@ -17,7 +17,7 @@ Date: 03 August 2026
 * Nikolaos Triantafyllou, University of Aegean, Greece
 * Malin Norlander, Bolagsverket, Sweden
 * Tomasz Blachowicz, Mastercard, Poland
-* George Fourtounis, Grnet, Greece
+* George Fourtounis, GRNET, Greece
 
 Table Of Contents
 
