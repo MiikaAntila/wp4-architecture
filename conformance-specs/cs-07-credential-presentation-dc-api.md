@@ -16,6 +16,7 @@ Table Of Contents
 - [5. Protocol Overview](#5-protocol-overview)
 - [6. High-level Flows](#6-high-level-flows)
   - [6.1 Same-device Presentation via DC API](#61-same-device-presentation-via-dc-api)
+  - [6.2 Cross-device Presentation via DC API Hybrid Transport](#62-cross-device-presentation-via-dc-api-hybrid-transport)
 - [7. Normative Requirements](#7-normative-requirements)
   - [7.1 Wallet Unit Requirements](#71-wallet-unit-requirements)
   - [7.2 Verifier Requirements](#72-verifier-requirements)
@@ -29,7 +30,7 @@ Table Of Contents
 
 This document is a **pre-flight conformance specification** as defined in the [Pre-flight CS ADR](../adr/pre-flight-CS.md). It is intended to enable early testing of credential presentation using the W3C Digital Credentials API (DC API) [1] within the WE BUILD ecosystem. The goal is to gather implementation experience and testing feedback that will inform a future full conformance specification.
 
-The Digital Credentials API provides a browser-native mechanism for verifiers to request credential presentations from wallet units. This removes the need for custom protocol schemes (such as `openid4vp://`) for same-device web flows and integrates credential presentation into the browser's security model.
+The Digital Credentials API provides a browser-native mechanism for verifiers to request credential presentations from wallet units. For same-device flows, this removes the need for custom protocol schemes (such as `openid4vp://`). For cross-device flows, the DC API leverages CTAP2 hybrid transport to connect the verifier's browser to a remote wallet, with the browser mediating the entire interaction. Both modes integrate credential presentation into the browser's security model.
 
 This specification complements **CS-002 (Credential Presentation)** [2] by defining how the same OpenID4VP-based presentation protocol operates when the browser's DC API serves as the invocation and transport layer, rather than custom URL schemes or redirect flows.
 
@@ -39,15 +40,16 @@ This specification defines the conformance expectations for credential presentat
 
 * **In scope:**
   * Same-device web presentation flows using `navigator.identity.get()` with the `"digital-credentials"` provider
+  * Cross-device presentation flows using DC API hybrid transport (CTAP2 / BLE + tunnel)
   * Integration of OpenID4VP request/response with the DC API transport
   * Verifier-side JavaScript API usage
   * Wallet unit registration and response handling via the DC API
   * Limitations of web-based wallet units and known mitigations
 
 * **Out of scope:**
-  * Cross-device presentation flows (covered by CS-002)
+  * Cross-device presentation flows via QR code scanning without browser mediation (covered by CS-002 §6.2)
   * Proximity-based presentation (e.g. ISO 18013-5 / BLE)
-  * Credential issuance (covered by CS-001)
+  * Credential issuance via DC API (`navigator.credentials.create()`) — not yet mature
   * Detailed trust evaluation and trust list resolution (covered by other WE BUILD specifications)
 
 # 3. Normative Language
@@ -78,7 +80,7 @@ The Digital Credentials API [1] extends the W3C Credential Management API [3] to
 
 This flow keeps the OpenID4VP request/response semantics from CS-002 intact while replacing the invocation and transport mechanism with the browser-native DC API.
 
-The key specification governing this interaction is the **W3C Digital Credentials API** [1], which at the time of writing is a Working Draft. Browser support is available in Chrome 128+ (Android) and is progressing in other browsers.
+The key specification governing this interaction is the **W3C Digital Credentials API** [1], which at the time of writing is a Working Draft. Browser support is available in Chrome 141+ on Android, macOS, and desktop platforms, and is progressing in other browsers. Cross-device support via hybrid transport is at an earlier stage (see §6.2 and [6]).
 
 # 6. High-level Flows
 
@@ -133,6 +135,39 @@ The verifier validates the presentation response as specified in CS-002 §6.1.7,
 - Credential status checks
 - Trust chain validation
 
+## 6.2 Cross-device Presentation via DC API Hybrid Transport
+
+The DC API supports cross-device presentation using CTAP2 hybrid transport [7]. This is architecturally distinct from the QR-based cross-device flow in CS-002 §6.2: the browser on the verifier's device mediates the entire interaction rather than the wallet connecting directly to the verifier's backend.
+
+### 6.2.1 Verifier Constructs Presentation Request
+
+The verifier constructs the OpenID4VP authorization request identically to §6.1.1. No changes to the request format are required for cross-device operation.
+
+### 6.2.2 DC API Invocation with Hybrid Transport
+
+The verifier invokes the DC API as in §6.1.2. The browser determines that no local wallet is available (or that the user selects a remote device) and initiates hybrid transport:
+
+1. The browser displays a QR code or uses BLE advertisement to establish a CTAP2 hybrid connection to the holder's remote device.
+2. The holder scans the QR code or accepts the BLE pairing on their mobile device.
+3. A secure tunnel is established between the verifier's browser and the remote wallet unit.
+
+### 6.2.3 Remote Wallet Processing
+
+The remote wallet unit:
+1. Receives the OpenID4VP request via the hybrid transport tunnel.
+2. Validates and processes the request as specified in §6.1.4.
+3. Returns the OpenID4VP response through the same tunnel.
+
+### 6.2.4 Response Delivery
+
+The browser receives the response via the hybrid tunnel and delivers it to the verifier's JavaScript context as the resolved value of `navigator.identity.get()`. From the verifier's perspective, the response is indistinguishable from a same-device response.
+
+### 6.2.5 Verifier Validation
+
+The verifier validates the response identically to §6.1.6.
+
+> **Note:** Cross-device DC API support via hybrid transport is at an early stage of browser implementation. Implementers SHOULD track [6] for current platform availability and be prepared for the hybrid path to be unavailable on some browser/OS combinations.
+
 # 7. Normative Requirements
 
 ## 7.1 Wallet Unit Requirements
@@ -144,6 +179,7 @@ The verifier validates the presentation response as specified in CS-002 §6.1.7,
 | WU-DC-03 | The WU MUST return OpenID4VP authorization responses via the DC API response mechanism. | [1], [4] |
 | WU-DC-04 | The WU MUST support the same credential formats and selective disclosure mechanisms as required by CS-002 §7.1. | [2] |
 | WU-DC-05 | The WU SHOULD support both DC API and `openid4vp://` invocation to ensure backward compatibility. | [2], [4] |
+| WU-DC-06 | The WU SHOULD support receiving DC API requests via CTAP2 hybrid transport to enable cross-device flows. | [1], [7] |
 
 ## 7.2 Verifier Requirements
 
@@ -154,6 +190,7 @@ The verifier validates the presentation response as specified in CS-002 §6.1.7,
 | VP-DC-03 | The Verifier MUST construct a valid OpenID4VP authorization request as specified in CS-002 §7.2. | [2], [4] |
 | VP-DC-04 | The Verifier SHOULD implement fallback to `openid4vp://` custom URL scheme or cross-device flow when the DC API is not available. | [2] |
 | VP-DC-05 | The Verifier MUST call the DC API from a [secure context](https://w3c.github.io/webappsec-secure-contexts/) and in response to a user activation event. | [1] §2.1 |
+| VP-DC-06 | The Verifier SHOULD support cross-device presentation via the DC API hybrid transport path where the browser provides it. | [1], [7] |
 
 # 8. Platform and Browser Support Considerations
 
@@ -210,3 +247,4 @@ Conformance testing for this pre-flight specification will be defined as part of
 | [4] | OpenID Foundation, "OpenID for Verifiable Presentations (OpenID4VP) 1.0", https://openid.net/specs/openid-4-verifiable-presentations-1_0.html |
 | [5] | OpenID Foundation, "OpenID4VP over the W3C Digital Credentials API", https://openid.net/specs/openid-4-verifiable-presentations-1_0-dc-api.html |
 | [6] | W3C Web Identity & Credentials Adoption CG, "Digital Credentials API Ecosystem Support", https://digitalcredentials.dev/ecosystem-support |
+| [7] | FIDO Alliance, "Client to Authenticator Protocol (CTAP) 2.2 — Hybrid Transport", https://fidoalliance.org/specs/fido-v2.2-rd-20230321/fido-client-to-authenticator-protocol-v2.2-rd-20230321.html#hybrid-transport |
