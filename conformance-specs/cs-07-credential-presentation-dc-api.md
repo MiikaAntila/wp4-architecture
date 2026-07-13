@@ -39,7 +39,7 @@ This specification complements **CS-002 (Credential Presentation)** [2] by defin
 This specification defines the conformance expectations for credential presentation using the Digital Credentials API:
 
 * **In scope:**
-  * Same-device web presentation flows using `navigator.identity.get()` with the `"digital-credentials"` provider
+  * Same-device web presentation flows using `navigator.credentials.get()` with the `digital` credential type
   * Cross-device presentation flows using DC API hybrid transport (CTAP2 / BLE + tunnel)
   * Integration of OpenID4VP request/response with the DC API transport
   * Verifier-side JavaScript API usage
@@ -70,7 +70,7 @@ The keywords **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHOULD**, **SHOU
 
 # 5. Protocol Overview
 
-The Digital Credentials API [1] extends the W3C Credential Management API [3] to support digital identity credentials. A verifier calls `navigator.identity.get()` with a request containing an OpenID4VP presentation request. The browser mediates the interaction:
+The Digital Credentials API [1] extends the W3C Credential Management API [3] to support digital identity credentials. A verifier calls `navigator.credentials.get()` with a `digital` options object containing an OpenID4VP presentation request. The browser mediates the interaction:
 
 1. The verifier constructs an OpenID4VP request object and passes it to the DC API.
 2. The browser identifies registered wallet units capable of fulfilling the request.
@@ -97,22 +97,22 @@ The verifier constructs an OpenID4VP authorization request as specified in CS-00
 The verifier invokes the DC API:
 
 ```javascript
-const presentationResponse = await navigator.identity.get({
+const credential = await navigator.credentials.get({
   digital: {
-    providers: [{
-      protocol: "openid4vp",
-      request: JSON.stringify(openid4vpRequest)
+    requests: [{
+      protocol: "openid4vp-v1-signed",
+      data: signedOpenid4vpRequest
     }]
   }
 });
 ```
 
-The `protocol` field MUST be set to `"openid4vp"`. The `request` field contains the serialized OpenID4VP authorization request.
+The `protocol` field MUST be set to `"openid4vp-v1-signed"` (see §7.2 VP-DC-02). The `data` field contains the signed OpenID4VP authorization request object. The verifier MUST use `response_type` value `dc_api.jwt` in the request to ensure encrypted responses (see §7.2 VP-DC-07).
 
 ### 6.1.3 Browser Mediation
 
 The browser:
-1. Identifies installed wallet units registered for the `"openid4vp"` protocol.
+1. Identifies installed wallet units registered for the `"openid4vp-v1-signed"` protocol.
 2. Presents a selection UI to the user if multiple wallets are available.
 3. Forwards the request to the selected wallet unit.
 
@@ -126,7 +126,7 @@ The wallet unit:
 
 ### 6.1.5 Response Delivery
 
-The wallet unit returns the OpenID4VP response via the DC API. The browser delivers the response to the verifier's JavaScript context as the resolved value of the `navigator.identity.get()` promise.
+The wallet unit returns the OpenID4VP response via the DC API. The browser delivers the response to the verifier's JavaScript context as the resolved value of the `navigator.credentials.get()` promise. The response is a `DigitalCredential` object whose `data` attribute contains the OpenID4VP response and whose `protocol` attribute confirms the protocol used.
 
 ### 6.1.6 Verifier Validation
 
@@ -160,7 +160,7 @@ The remote wallet unit:
 
 ### 6.2.4 Response Delivery
 
-The browser receives the response via the hybrid tunnel and delivers it to the verifier's JavaScript context as the resolved value of `navigator.identity.get()`. From the verifier's perspective, the response is indistinguishable from a same-device response.
+The browser receives the response via the hybrid tunnel and delivers it to the verifier's JavaScript context as the resolved value of `navigator.credentials.get()`. From the verifier's perspective, the response is indistinguishable from a same-device response.
 
 ### 6.2.5 Verifier Validation
 
@@ -174,7 +174,7 @@ The verifier validates the response identically to §6.1.6.
 
 | ID | Requirement | Reference |
 |----|-------------|-----------|
-| WU-DC-01 | The WU MUST register itself with the platform as a digital credential provider for the `"openid4vp"` protocol. | [1] §3.1 |
+| WU-DC-01 | The WU MUST register itself with the platform as a digital credential provider for the `"openid4vp-v1-signed"` protocol. | [1] §7.8.2 |
 | WU-DC-02 | The WU MUST accept OpenID4VP authorization requests received via the DC API. | [1], [4] |
 | WU-DC-03 | The WU MUST return OpenID4VP authorization responses via the DC API response mechanism. | [1], [4] |
 | WU-DC-04 | The WU MUST support the same credential formats and selective disclosure mechanisms as required by CS-002 §7.1. | [2] |
@@ -185,16 +185,19 @@ The verifier validates the response identically to §6.1.6.
 
 | ID | Requirement | Reference |
 |----|-------------|-----------|
-| VP-DC-01 | The Verifier MUST use `navigator.identity.get()` with the `"digital-credentials"` provider type when the DC API is available. | [1] |
-| VP-DC-02 | The Verifier MUST set the `protocol` field to `"openid4vp"` in the DC API request. | [1], [5] |
+| VP-DC-01 | The Verifier MUST use `navigator.credentials.get()` with the `digital` options member when the DC API is available. | [1] §7.1 |
+| VP-DC-02 | The Verifier MUST set the `protocol` field to `"openid4vp-v1-signed"` in the DC API request to ensure signed authorization requests with verifier authentication. | [1] §7.8.2, [5] |
 | VP-DC-03 | The Verifier MUST construct a valid OpenID4VP authorization request as specified in CS-002 §7.2. | [2], [4] |
 | VP-DC-04 | The Verifier SHOULD implement fallback to `openid4vp://` custom URL scheme or cross-device flow when the DC API is not available. | [2] |
-| VP-DC-05 | The Verifier MUST call the DC API from a [secure context](https://w3c.github.io/webappsec-secure-contexts/) and in response to a user activation event. | [1] §2.1 |
+| VP-DC-05 | The Verifier MUST call the DC API from a [secure context](https://w3c.github.io/webappsec-secure-contexts/) and in response to a user activation event. | [1] §8.1 |
 | VP-DC-06 | The Verifier SHOULD support cross-device presentation via the DC API hybrid transport path where the browser provides it. | [1], [7] |
+| VP-DC-07 | The Verifier MUST use `response_type` value `dc_api.jwt` in the OpenID4VP authorization request to ensure the response is encrypted and integrity-protected. | [5] |
 
 # 8. Platform and Browser Support Considerations
 
-The DC API is not yet universally supported across browsers and platforms. At the time of writing, presentation support is available in Chrome 141+ on Android, macOS, and desktop platforms, with other browsers at various stages of development [6]. Verifiers and wallet providers MUST plan for environments where the DC API is absent or where the `"openid4vp"` protocol is not natively supported.
+The DC API is not yet universally supported across browsers and platforms. At the time of writing, presentation support is available in Chrome 141+ on Android, macOS, and desktop platforms, with other browsers at various stages of development [6]. Verifiers and wallet providers MUST plan for environments where the DC API is absent or where the `"openid4vp-v1-signed"` protocol is not natively supported.
+
+Verifiers SHOULD use `DigitalCredential.userAgentAllowsProtocol("openid4vp-v1-signed")` to detect protocol support before attempting a DC API call [1] §7.7.3.
 
 Two complementary polyfill strategies exist to bridge these gaps. They address different sides of the interaction and MAY be deployed independently or together.
 
@@ -205,7 +208,7 @@ The DC API requires wallet units to register as credential providers at the OS o
 A **browser extension** can act as a polyfill on the wallet side by:
 
 1. Registering itself as a credential provider proxy with the browser.
-2. Intercepting DC API requests issued by verifiers via `navigator.identity.get()`.
+2. Intercepting DC API requests issued by verifiers via `navigator.credentials.get()`.
 3. Routing the OpenID4VP request to a web-based wallet that has registered with the extension.
 4. Returning the wallet's OpenID4VP response back through the DC API to the verifier.
 
@@ -219,8 +222,8 @@ When the DC API is not available in the browser at all — because the browser d
 
 A **verifier-side polyfill** (implemented as a JavaScript library or WebAssembly module) can bridge this gap by:
 
-1. Detecting whether the DC API is available and whether a compatible wallet is registered.
-2. If the DC API is available, using it as the primary invocation path (this specification).
+1. Detecting whether the DC API is available (via `typeof DigitalCredential !== "undefined"`) and whether the `"openid4vp-v1-signed"` protocol is allowed (via `DigitalCredential.userAgentAllowsProtocol("openid4vp-v1-signed")`).
+2. If the DC API is available and the protocol is allowed, using it as the primary invocation path (this specification).
 3. If the DC API is unavailable or the request fails with a `NotSupportedError`, falling back to:
    - **Same-device flow:** Redirecting to an `openid4vp://` custom URL scheme with the authorization request (CS-002 §6.1).
    - **Cross-device flow:** Displaying a QR code encoding the OpenID4VP request URI for scanning by a mobile wallet (CS-002 §6.2).
@@ -241,7 +244,7 @@ Conformance testing for this pre-flight specification will be defined as part of
 
 | # | Reference |
 |---|-----------|
-| [1] | W3C, "Digital Credentials API", W3C Working Draft, https://wicg.github.io/digital-credentials/ |
+| [1] | W3C, "Digital Credentials API", W3C Editor's Draft, https://w3c-fedid.github.io/digital-credentials/ |
 | [2] | WE BUILD, "Conformance Specification: Credential Presentation v1.1 (CS-002)", 2026 |
 | [3] | W3C, "Credential Management Level 1", W3C Recommendation, https://www.w3.org/TR/credential-management-1/ |
 | [4] | OpenID Foundation, "OpenID for Verifiable Presentations (OpenID4VP) 1.0", https://openid.net/specs/openid-4-verifiable-presentations-1_0.html |
