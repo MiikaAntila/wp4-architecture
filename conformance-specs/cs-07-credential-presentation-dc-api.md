@@ -22,7 +22,7 @@ Table Of Contents
   - [7.1 Wallet Unit Requirements](#71-wallet-unit-requirements)
   - [7.2 Verifier Requirements](#72-verifier-requirements)
   - [7.3 Issuer Requirements](#73-issuer-requirements)
-- [8. Platform and Browser Support Considerations](#8-platform-and-browser-support-considerations)
+- [8. Platform and Browser Support Considerations (Informative)](#8-platform-and-browser-support-considerations-informative)
   - [8.1 Browser Extension Polyfill (Wallet-side)](#81-browser-extension-polyfill-wallet-side)
   - [8.2 Verifier-side Polyfill](#82-verifier-side-polyfill)
 - [9. Conformance](#9-conformance)
@@ -70,7 +70,6 @@ The keywords **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHOULD**, **SHOU
 | **Verifier (Relying Party)** | A web application that requests credential presentations via the DC API. |
 | **Issuer** | A web application that initiates credential issuance to a wallet unit via the DC API. |
 | **User Agent (Browser)** | The browser mediating the DC API interaction between the Verifier/Issuer and the Wallet Unit. |
-| **Wallet Companion** | A browser extension that bridges the DC API to web-based wallet units that cannot natively register as credential providers (see §8.1). |
 
 # 5. Protocol Overview
 
@@ -105,13 +104,15 @@ const credential = await navigator.credentials.get({
   digital: {
     requests: [{
       protocol: "openid4vp-v1-signed",
-      data: signedOpenid4vpRequest
+      data: {
+        request: signedOpenid4vpRequest  // JWS Compact Serialization
+      }
     }]
   }
 });
 ```
 
-The `protocol` field MUST be set to `"openid4vp-v1-signed"` (see §7.2 VP-DC-02). The `data` field contains the signed OpenID4VP authorization request object. The verifier MUST use `response_type` value `dc_api.jwt` in the request to ensure encrypted responses (see §7.2 VP-DC-07).
+The `protocol` field MUST be set to `"openid4vp-v1-signed"` (see §7.2 VP-DC-02). The `data` field MUST be a JSON object whose `request` member contains the signed OpenID4VP authorization request in JWS Compact Serialization ([4] §A.3.2.1). The verifier MUST set `response_type` to `vp_token` and `response_mode` to `dc_api.jwt` in the signed request object to ensure encrypted responses (see §7.2 VP-DC-07). The verifier MUST include `expected_origins` in the signed request (see §7.2 VP-DC-08).
 
 ### 6.1.3 Browser Mediation
 
@@ -141,7 +142,7 @@ The verifier validates the presentation response as specified in CS-002 §6.1.7,
 
 ## 6.2 Cross-device Presentation via DC API Hybrid Transport
 
-The DC API supports cross-device presentation using CTAP2 hybrid transport [7]. This is architecturally distinct from the QR-based cross-device flow in CS-002 §6.2: the browser on the verifier's device mediates the entire interaction rather than the wallet connecting directly to the verifier's backend.
+The DC API supports cross-device presentation using CTAP2 hybrid transport [6]. This is architecturally distinct from the QR-based cross-device flow in CS-002 §6.2: the browser on the verifier's device mediates the entire interaction rather than the wallet connecting directly to the verifier's backend.
 
 ### 6.2.1 Verifier Constructs Presentation Request
 
@@ -231,21 +232,23 @@ The wallet unit returns a response via the DC API. The browser delivers it to th
 | WU-DC-03 | The WU MUST return OpenID4VP authorization responses via the DC API response mechanism. | [1], [4] |
 | WU-DC-04 | The WU MUST support the same credential formats and selective disclosure mechanisms as required by CS-002 §7.1. | [2] |
 | WU-DC-05 | The WU SHOULD support both DC API and `openid4vp://` invocation to ensure backward compatibility. | [2], [4] |
-| WU-DC-06 | The WU SHOULD support receiving DC API requests via CTAP2 hybrid transport to enable cross-device flows. | [1], [7] |
+| WU-DC-06 | The WU SHOULD support receiving DC API requests via CTAP2 hybrid transport to enable cross-device flows. | [1], [6] |
 | WU-DC-07 | The WU SHOULD register as a credential provider for the `"openid4vci-v1"` protocol to support issuance via the DC API. | [1] §7.8.3 |
-| WU-DC-08 | The WU MUST, upon receiving a credential offer via the DC API, initiate the standard OID4VCI flow with the issuer's endpoints as specified in CS-001. | [8] |
+| WU-DC-08 | The WU MUST, upon receiving a credential offer via the DC API, initiate the standard OID4VCI flow with the issuer's endpoints as specified in CS-001. | [7] |
+| WU-DC-09 | The WU MUST validate that the requesting origin matches one of the values in `expected_origins` from the signed authorization request before processing the request. | [4] §A.2 |
 
 ## 7.2 Verifier Requirements
 
 | ID | Requirement | Reference |
 |----|-------------|-----------|
 | VP-DC-01 | The Verifier MUST use `navigator.credentials.get()` with the `digital` options member when the DC API is available. | [1] §7.1 |
-| VP-DC-02 | The Verifier MUST set the `protocol` field to `"openid4vp-v1-signed"` in the DC API request to ensure signed authorization requests with verifier authentication. | [1] §7.8.2, [5] |
+| VP-DC-02 | The Verifier MUST set the `protocol` field to `"openid4vp-v1-signed"` in the DC API request to ensure signed authorization requests with verifier authentication. | [1] §7.8.2, [4] §A.3.2 |
 | VP-DC-03 | The Verifier MUST construct a valid OpenID4VP authorization request as specified in CS-002 §7.2. | [2], [4] |
 | VP-DC-04 | The Verifier SHOULD implement fallback to `openid4vp://` custom URL scheme or cross-device flow when the DC API is not available. | [2] |
 | VP-DC-05 | The Verifier MUST call the DC API from a [secure context](https://w3c.github.io/webappsec-secure-contexts/) and in response to a user activation event. | [1] §8.1 |
-| VP-DC-06 | The Verifier SHOULD support cross-device presentation via the DC API hybrid transport path where the browser provides it. | [1], [7] |
-| VP-DC-07 | The Verifier MUST use `response_type` value `dc_api.jwt` in the OpenID4VP authorization request to ensure the response is encrypted and integrity-protected. | [5] |
+| VP-DC-06 | The Verifier SHOULD support cross-device presentation via the DC API hybrid transport path where the browser provides it. | [1], [6] |
+| VP-DC-07 | The Verifier MUST set `response_type` to `vp_token` and `response_mode` to `dc_api.jwt` in the OpenID4VP authorization request. | [4] §A.2, [4] §8.3 |
+| VP-DC-08 | The Verifier MUST include `expected_origins` in signed requests sent via the DC API. | [4] §A.2 |
 
 ## 7.3 Issuer Requirements
 
@@ -253,11 +256,13 @@ The wallet unit returns a response via the DC API. The browser delivers it to th
 |----|-------------|----------|
 | IS-DC-01 | The Issuer MUST use `navigator.credentials.create()` with the `digital` options member to initiate credential issuance when the DC API is available. | [1] §7.4 |
 | IS-DC-02 | The Issuer MUST set the `protocol` field to `"openid4vci-v1"` in the DC API issuance request. | [1] §7.8.3 |
-| IS-DC-03 | The Issuer MUST construct a valid OID4VCI credential offer as specified in CS-001. | [8] |
+| IS-DC-03 | The Issuer MUST construct a valid OID4VCI credential offer as specified in CS-001. | [7] |
 | IS-DC-04 | The Issuer MUST call the DC API from a [secure context](https://w3c.github.io/webappsec-secure-contexts/) and in response to a user activation event. | [1] §8.3 |
-| IS-DC-05 | The Issuer SHOULD implement fallback to direct OID4VCI credential offer delivery (e.g. via QR code or deep link) when the DC API is not available. | [8] |
+| IS-DC-05 | The Issuer SHOULD implement fallback to direct OID4VCI credential offer delivery (e.g. via QR code or deep link) when the DC API is not available. | [7] |
 
-# 8. Platform and Browser Support Considerations
+# 8. Platform and Browser Support Considerations (Informative)
+
+> **Note:** This section is informative and provides implementation guidance for the testing phase. It does not contain normative requirements.
 
 The DC API is not yet universally supported across browsers and platforms. At the time of writing, presentation support is available in Chrome 141+ on Android, macOS, and desktop platforms, with other browsers at various stages of development [6]. Verifiers and wallet providers MUST plan for environments where the DC API is absent or where the `"openid4vp-v1-signed"` protocol is not natively supported.
 
@@ -310,11 +315,10 @@ Conformance testing for this pre-flight specification will be defined as part of
 
 | # | Reference |
 |---|-----------|
-| [1] | W3C, "Digital Credentials API", W3C Editor's Draft, https://w3c-fedid.github.io/digital-credentials/ |
+| [1] | W3C, "Digital Credentials API", W3C Working Draft, 15 July 2026, https://www.w3.org/TR/2026/WD-digital-credentials-20260715/ |
 | [2] | WE BUILD, "Conformance Specification: Credential Presentation v1.1 (CS-002)", 2026 |
 | [3] | W3C, "Credential Management Level 1", W3C Recommendation, https://www.w3.org/TR/credential-management-1/ |
-| [4] | OpenID Foundation, "OpenID for Verifiable Presentations (OpenID4VP) 1.0", https://openid.net/specs/openid-4-verifiable-presentations-1_0.html |
-| [5] | OpenID Foundation, "OpenID4VP over the W3C Digital Credentials API", https://openid.net/specs/openid-4-verifiable-presentations-1_0-dc-api.html |
-| [6] | W3C Web Identity & Credentials Adoption CG, "Digital Credentials API Ecosystem Support", https://digitalcredentials.dev/ecosystem-support |
-| [7] | FIDO Alliance, "Client to Authenticator Protocol (CTAP) 2.2 — Hybrid Transport", https://fidoalliance.org/specs/fido-v2.2-rd-20230321/fido-client-to-authenticator-protocol-v2.2-rd-20230321.html#hybrid-transport |
-| [8] | OpenID Foundation, "OpenID for Verifiable Credential Issuance (OID4VCI) 1.0", https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html |
+| [4] | OpenID Foundation, "OpenID for Verifiable Presentations (OpenID4VP) 1.0", https://openid.net/specs/openid-4-verifiable-presentations-1_0.html (DC API profile: Appendix A) |
+| [5] | W3C Web Identity & Credentials Adoption CG, "Digital Credentials API Ecosystem Support", https://digitalcredentials.dev/ecosystem-support |
+| [6] | FIDO Alliance, "Client to Authenticator Protocol (CTAP) 2.2 — Hybrid Transport", https://fidoalliance.org/specs/fido-v2.2-rd-20230321/fido-client-to-authenticator-protocol-v2.2-rd-20230321.html#hybrid-transport |
+| [7] | OpenID Foundation, "OpenID for Verifiable Credential Issuance (OID4VCI) 1.0", https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html |
