@@ -52,7 +52,7 @@ graph TB
 
 | **WBCS #** | **WBCS Title**                                                                         |
 | -------- | ------------------------------------------------------------------------------------ |
-| CS-001   | [Credential Issuance - v1.0](cs-01-credential-issuance.md)         |
+| CS-001   | [Credential Issuance - v1.1](cs-01-credential-issuance.md)         |
 | CS-002   | [Credential Presentation - v1.0](cs-02-credential-presentation.md) |
 | CS-003   | [Remote Qualified Signing with Wallet Units - v1.0](cs-03-remote-signing-with-wallet-units.md) |
 |          |
