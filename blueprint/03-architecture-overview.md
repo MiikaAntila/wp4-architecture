@@ -47,8 +47,8 @@ Accordingly, interactions between data senders and receipients may be routed thr
 The QTSP is recognised in a scheme for trust services, just like in the previous diagram, enabling other participants to verify QERDS evidence issued by the QTSP.
 The WE BUILD Digital Directory (simulating the European Digital Directory) provides economic and public sector bodies with digital addressing for secure routing of documents and notifications.
 
-While this model can apply to any data transmission, the senders, recipients and their QERDS providers can take the issuer-holder-verifier roles as illustrated as above.
-The QERDS provides an additional layer in the WE BUILD ecosystem:
+While this model can apply to any data transmission, the application of QERDS in WE BUILD focuses on document submissions and notifications.
+The QERDS provides an additional interaction model in the WE BUILD ecosystem, complementary to the issuer-holder-verifier model above:
 
 ```mermaid
 %% WE BUILD additional trust topology with the QERDS and the European Digital Directory
@@ -57,11 +57,13 @@ graph TB
     TL["WE BUILD<br>Trusted Lists"]
     subgraph Users[Wallet users]
       direction LR
-      Sender
-      Recipient
+      SenderBW["Business<br>Wallet"]
+      RecipientBW["Business<br>Wallet"]
+      Sender-->|"uses"|SenderBW
+      RecipientBW-->|"is used by"|Recipient
     end
-    Sender-->|"submits documents using the QERDS to"|Recipient
-    Sender-->|"uses the QERDS to notify"|Recipient
+    SenderBW-->|"submits documents using the QERDS to"|RecipientBW
+    SenderBW-->|"uses the QERDS to notify"|RecipientBW
     Users-->|"discover wallet services and capabilities using"|Directory
     Users-->|"validate QERDS evidence against"|TL
 
@@ -72,6 +74,7 @@ graph TB
 
     class Users group
     class Sender,Recipient primaryRole
+    class SenderBW,RecipientBW component
     class Directory,TL governance
 ```
 
