@@ -1,7 +1,13 @@
 # WE BUILD - Conformance Specification:  Credential Issuance
 
 Version 1.1
-Date: 15 July 2026
+Date: 03 August 2026
+
+**Revision history**
+
+* Version 1.2 (15 July 2026): Added the re-issuance chapter, resolving issue [#244](https://github.com/webuild-consortium/wp4-architecture/issues/244).
+* Version 1.1 (10 July 2026): Added the pre-authorised code-flow to support payments
+* Version 1.0 (28 November 2025): Initial version.
 
 **Authors / Contributors**: WP4 Architecture
 
@@ -11,6 +17,7 @@ Date: 15 July 2026
 * Nikolaos Triantafyllou, University of Aegean, Greece
 * Malin Norlander, Bolagsverket, Sweden
 * Tomasz Blachowicz, Mastercard, Poland
+* George Fourtounis, Grnet, Greece
 
 Table Of Contents
 
@@ -38,6 +45,10 @@ Table Of Contents
     - [6.2.6 Token request (Pre-Authorised Code grant)](#626-token-request-pre-authorised-code-grant)
     - [6.2.7 Credential Request, validation and storage](#627-credential-request-validation-and-storage)
   - [6.3 Deferred Credential Request](#63-deferred-credential-request)
+  - [6.4 Re-issuance Flow](#64-re-issuance-flow)
+    - [6.4.1 Re-issuance triggers](#641-re-issuance-triggers)
+    - [6.4.2 Re-issuance using the Refresh Token grant](#642-re-issuance-using-the-refresh-token-grant)
+    - [6.4.3 Fallback to the full authorisation flow](#643-fallback-to-the-full-authorisation-flow)
 - [7. Normative Requirements](#7-normative-requirements)
   - [7.1 Common requirements (WU and Issuer)](#71-common-requirements-wu-and-issuer)
   - [7.2 Credential Offer](#72-credential-offer)
@@ -46,14 +57,15 @@ Table Of Contents
   - [7.5 Credential Endpoint](#75-credential-endpoint)
   - [7.6 Deferred Credential Endpoint](#76-deferred-credential-endpoint)
   - [7.7 Server Metadata](#77-server-metadata)
+  - [7.8 Re-issuance](#78-re-issuance)
 - [8. Interface Definitions](#8-interface-definitions)
   - [8.1 WU Invocation Interface](#81-wu-invocation-interface)
   - [8.2 Credential Offer Interface](#82-credential-offer-interface)
   - [8.3 PAR Endpoint](#83-par-endpoint)
   - [8.4 Token Endpoint](#84-token-endpoint)
   - [8.5 Credential Endpoint](#85-credential-endpoint)
-  - [8.7 Deferred Credential Endpoint](#87-deferred-credential-endpoint)
-  - [8.8 Metadata Endpoints](#88-metadata-endpoints)
+  - [8.6 Deferred Credential Endpoint](#86-deferred-credential-endpoint)
+  - [8.7 Metadata Endpoints](#87-metadata-endpoints)
 - [9. Conformance](#9-conformance)
 - [References](#references)
 
@@ -82,6 +94,7 @@ This specification defines:
     * Credential Issuers and their Authorisation Servers
 * Support for:
     * Wallet-initiated issuance
+    * Re-issuance of previously issued attestations
     * Issuer-initiated issuance via Credential Offer, using the Authorisation Code grant or the Pre-Authorised Code grant
 
 This document describes:
@@ -157,21 +170,18 @@ This section presents the flows as text-based sequence descriptions.
 1. The Holder chooses a credential type, for example, a PID, QEAA or business credential.
 2. The WU selects the appropriate Issuer and the corresponding `scope` value.
 
-
 ### 6.1.3 Pushed Authorisation Request (PAR)
 
 1. The WU constructs an authorisation request containing, at a minimum:
-        * `client_id`
-        * `scope` identifying the credential type
-        * `code_challenge` using PKCE `S256`
-        * `redirect_uri`
-        * `response_type=code`
-        * `state`
-        * `nonce`
+	* `client_id`
+ 	* `scope` identifying the credential type
+	* `code_challenge` using PKCE `S256`
+ 	* `redirect_uri`
+    * `response_type=code`
+    * `state`
+    * `nonce`
 1. The WU sends this request to the Issuer’s PAR endpoint, with client authentication bound to the WUA. \
-
 2. The PAR endpoint returns a `request_uri` and a validity period.
-
 
 ### 6.1.4 User authorisation
 
@@ -183,28 +193,28 @@ This section presents the flows as text-based sequence descriptions.
 ### 6.1.5 Token request
 
 1. The WU sends a token request to the Token Endpoint, including:
-        * `grant_type=authorization_code`
-        * `code`
-        * `redirect_uri`
-        * `code_verifier` matching the earlier `code_challenge`
-        * client authentication using WUA
+   * `grant_type=authorization_code`
+   * `code`
+   * `redirect_uri`
+   * `code_verifier` matching the earlier `code_challenge`
+   * client authentication using WUA
 2. The Token Endpoint validates the request and returns:
-        * sender-constrained `access_token`
-        * optional `refresh_token` for credential refresh
+   * sender-constrained `access_token`
+   * optional `refresh_token` for credential refresh
 
 ### 6.1.6 Credential request
 
 1. The WU sends a request to the Credential Endpoint containing:
-        * `Authorization: Bearer {access_token}`
-        * the requested credential format (SD-JWT-VC / mdoc)
-        * a `proof` object using the `JWT` proof type that binds the credential to the WU’s subject key
+	* `Authorization: Bearer {access_token}`
+ 	* the requested credential format (SD-JWT-VC; see NOTE **CS01_01**)
+  	* a `proof` object using the `JWT` proof type that binds the credential to the WU’s subject key
 
-2. The Credential Issuer validates:
-        * the access token and its sender-constraining mechanism
-        * the proof JWT
-        * issuance policy
+3. The Credential Issuer validates:
+	* the access token and its sender-constraining mechanism
+ 	* the proof JWT
+  	* issuance policy
 
-3. The Issuer returns the issued SD-JWT-VC.
+5. The Issuer returns the issued SD-JWT-VC.
 
 
 ### 6.1.7 Storage
@@ -310,6 +320,47 @@ When the Credential Issuer cannot immediately produce one or more credentials:
 
 4. Batch requests may contain a mix of immediate and deferred items. Each deferred item receives its own `transaction_id` and can be polled independently.
 
+## 6.4 Re-issuance Flow
+
+Re-issuance is the replacement of an attestation that already exists in a Wallet Unit by an attestation of the same attestation type, issued by the same Attestation Provider to the same Wallet Unit. Re-issuance keeps a valid technical attestation available throughout the administrative validity of the underlying attestation, is always initiated by the WU, and, to the maximum extent possible, requires no User authentication or interaction (ARF 2.9 [6], Annex 2, Topic 10, ISSU_42; Discussion Paper for Topic B [9]).
+
+**Actors**: Holder, WU, Issuer (AS and Credential Issuer).
+
+### 6.4.1 Re-issuance triggers
+
+Re-issuance can be triggered by:
+
+* **Approaching end of technical validity**: the WU initiates re-issuance ahead of expiry, some time before the existing attestation expires (ARF 2.9 [6], ISSU_50).
+* **Attribute value changes**: when the value of one or more attributes changes, the Issuer revokes the existing attestation and, where the User's contact details are known, notifies the User out of band with a request to obtain a re-issued attestation (ARF 2.9 [6], VCR_09).
+* **Depletion of once-only or batch credentials**: the WU initiates re-issuance when the supply of single-use or batch-issued attestations is exhausted.
+* **Manual re-issuance**: the User manually initiates re-issuance of an attestation from the WU (ARF 2.9 [6], ISSU_58).
+
+### 6.4.2 Re-issuance using the Refresh Token grant
+
+The primary re-issuance mechanism is the OpenID4VCI Refresh Token grant at the Token Endpoint, so that re-issuance requires no User authentication or interaction to the maximum extent possible.
+
+1. During the original issuance, the Issuer returns a `refresh_token` alongside the `access_token` (section 6.1.5). The refresh token is sender-constrained (DPoP-bound) and bound to the WU that received the original attestation (section 7.8).
+2. When a re-issuance trigger occurs, the WU sends a token request to the Token Endpoint, including:
+   * `grant_type=refresh_token`
+   * the `refresh_token` issued during the previous exchange
+   * a DPoP proof using the key to which the refresh token is bound
+   * client authentication using the WIA, as at the original Token Request (section 7.4)
+4. The Token Endpoint validates the refresh token, the DPoP proof and the WIA, verifies that re-issuance is to the same WU as the existing attestation, and returns:
+   * a new sender-constrained `access_token`
+   * a rotated `refresh_token` for the next re-issuance
+5. The WU sends a Credential Request to the Credential Endpoint as in section 6.1.6, using the new access token, and presenting a fresh Key Attestation where required, so that the Issuer can verify that the re-issued device-bound attestation is bound to the same WSCA/WSCD as the attestation it replaces (section 7.8).
+6. The Issuer returns the re-issued attestation in the profiled credential format.
+7. The WU validates and stores the re-issued attestation, compares its attribute values with those of the existing attestation and notifies the User of any differences, and deletes the replaced attestation after successful re-issuance (section 7.8).
+
+Because no authorisation code is involved, no front-channel User interaction takes place in this flow.
+
+### 6.4.3 Fallback to the full authorisation flow
+
+Where no valid refresh token exists, or the Authorisation Server requires re-authentication (for example, after attribute value changes), the WU falls back to the full Authorisation Code Flow with PAR (section 6.1) or processes a new Credential Offer (section 6.2). The remainder of the flow, including authorisation, token request, credential request and storage, is identical to those flows.
+
+> [!NOTE]
+> CS01_02: Batch issuance and batch re-issuance per ARF 2.9 [6] and the Discussion Paper for Topic B [9] will be specified in a subsequent version of this document.
+
 # 7. Normative Requirements
 
 This section summarises the mandatory requirements for WE BUILD implementations.
@@ -395,7 +446,7 @@ Issuers **MUST**:
 
 Issuers **SHOULD**:
 
-1. Support refresh tokens for credential refresh, following OpenID4VCI guidance on refresh usage and lifetime.
+1. Support refresh tokens for credential refresh, following OpenID4VCI guidance on refresh usage and lifetime. Where re-issuance is supported, sender-constrained refresh tokens are REQUIRED and are specified normatively in section 7.8.
 
 > [!NOTE]
 > Because the WIA `cnf` key is used as the DPoP key (WUs item 3 above), for WUA-based issuance the Access Token is DPoP-bound (section 7.1).
@@ -482,6 +533,24 @@ Wallets **MUST**:
 Issuers **MAY**:
 
 1. Publish a `key_attestations_required` object in Credential Issuer metadata stating the minimum acceptable `key_storage` and `user_authentication` levels (ISO 18045 AVA_VAN), per OpenID4VCI [1] Appendix D. The KA claims are defined in CS-04 [7] / TS-03 [5], clause 2.3.2.
+
+## 7.8 Re-issuance
+
+Issuers **MUST**:
+
+1. Issue sender-constrained refresh tokens (DPoP-bound) where re-issuance is supported, and support the OpenID4VCI features that enable re-issuance of attestations (ARF 2.9 [6], ISSU_63; OpenID4VCI [1], section 14.5).
+2. Verify that a re-issued device-bound attestation is bound to the same WSCA/WSCD as the attestation it replaces, using the DPoP-bound refresh token and, where required, a fresh Key Attestation, reusing the KA mechanism defined in section 7.5 and CS-04 [7] (ARF 2.9 [6], ISSU_65).
+3. Define the refresh token lifetime and rotation relative to the administrative validity of the credential, and return explicit errors when re-issuance is refused.
+
+WUs **MUST**:
+
+1. Request re-issuance some time before the existing attestation expires (ARF 2.9 [6], ISSU_50).
+2. Give the User the option to manually initiate re-issuance for any attestation, attempt to start the process immediately when the User does so, and notify the User if the request did not succeed (ARF 2.9 [6], ISSU_58).
+3. Compare the attribute values of the re-issued attestation with those of the existing attestation and notify the User of any differences (ARF 2.9 [6], ISSU_59).
+4. Handle re-issuance refusals gracefully, for example by retrying after an appropriate delay and applying back-off, consistent with section 7.6 (ARF 2.9 [6], ISSU_60).
+5. Delete the replaced attestation after successful re-issuance and no longer present it (ARF 2.9 [6], ISSU_62).
+
+**Wallet Unit Attestation.** On the `refresh_token` grant, the WU re-presents the WIA as client authentication at the Token Endpoint, in the same way as on the original Token Request (section 7.4), together with the DPoP proof for the key to which the refresh token is bound. Re-issuance of the WIA and KA themselves takes place without User action (ARF 2.9 [6], ISSU_42). Where the WUA has rotated, the WU presents the current valid WIA and, at the Credential Endpoint, a Key Attestation for the current keys, which the Issuer verifies as for first issuance. CS-04 [7] is authoritative for WUA structure, validity, revocation and binding, and this specification references it rather than restating those rules (section 7.1, item 6).
 
 # 8. Interface Definitions
 
@@ -586,11 +655,29 @@ All PAR requests MUST be client-authenticated according to Section 7.4.
 * `expires_in`
 * optional `refresh_token`
 
-**Error Response (Pre-Authorised Code grant)**
+**Refresh Token grant**
+
+For re-issuance (section 6.4), the Token Endpoint also supports the `refresh_token` grant.
+
+**Request (logical fields)**
+
+* `grant_type=refresh_token`
+* `refresh_token` issued during a previous token exchange
+* DPoP proof for the key to which the refresh token is bound
+* client authentication using the WIA, as for the `authorization_code` grant
+
+**Response**
+
+* `access_token` (sender-constrained)
+* `token_type`
+* `expires_in`
+* `refresh_token` (rotated for the next re-issuance)
+
+**Error Respond**
 
 In line with the OpenID4VCI [1] Token Error Response, the AS returns:
 
-* `invalid_grant`: the `pre-authorized_code` is invalid, expired or already used, or the Transaction Code value is wrong
+* `invalid_grant` (for example, an expired, revoked or unknown refresh token), the WU MUST fall back to the full Authorisation Code Flow with PAR (section 6.1) or a new Credential Offer (section 6.2). The `pre-authorized_code` is invalid, expired or already used, or the Transaction Code value is wrong
 * `invalid_request`: a Transaction Code was provided but not expected, or expected but not provided
 * `invalid_client`: the Token Request lacks the client authentication required by this profile
 
@@ -611,7 +698,7 @@ In line with the OpenID4VCI [1] Token Error Response, the AS returns:
 **Response**
 * SD-JWT-VC credential and any associated metadata defined by the OpenID4VCI SD-JWT-VC profile
 
-## 8.7 Deferred Credential Endpoint
+## 8.6 Deferred Credential Endpoint
 
 **Direction:** WU → Issuer \
 **Method:** POST
@@ -646,7 +733,7 @@ If the Deferred Credential Request is invalid, the Issuer returns an error respo
 * <code>invalid_transaction_id:</code> Indicates that the `transaction_id` was not issued by the Credential Issuer or has already been used.
 * If the Credential Issuer can no longer issue the credential(s), it returns `credential_request_denied`. The WU stops retrying for the given `transaction_id`.
 
-## 8.8 Metadata Endpoints
+## 8.7 Metadata Endpoints
 
 Issuers **MUST** publish:
 
@@ -666,12 +753,14 @@ An implementation **conforms to this specification as a Wallet Provider** if it:
 1. Implements the WU requirements in Sections 6 and 7.
 2. Supports the interfaces defined for WU behaviour in Section 8.
 3. Uses SD-JWT-VC and OpenID4VCI as profiled by the OpenID4VC High Assurance Interoperability Profile Implementer’s Draft, Section 4.
+4. Implements the WU re-issuance requirements in sections 6.4 and 7.8.
 
 An implementation **conforms to this specification as an Issuer** if it:
 
 1. Implements the Issuer requirements in Sections 6 and 7.
 2. Publishes server metadata, including type to `scope` mappings.
 3. Provides the PAR, Token, Credential and WU invocation interfaces described in Section 8.
+4. Implements the Issuer re-issuance requirements in sections 6.4 and 7.8, including the Refresh Token grant at the Token Endpoint (section 8.4).
 
 Profiles may define additional constraints for specific WE BUILD credential types, such as PID, QEAA, or business credentials. Such profiles MUST NOT relax the mandatory requirements in this document. The specific issuance will be taken into a separate CS.
 
@@ -679,7 +768,7 @@ Profiles may define additional constraints for specific WE BUILD credential type
 
 [1]	OpenID Foundation (2025) OpenID for Verifiable Credential Issuance 1.0. OpenID Foundation. Available at: [https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html) (Accessed: 24 November 2025).
 
-[2]	OpenID Foundation (2025) OpenID4VC High Assurance Interoperability Profile – draft 03. OpenID Foundation. Available at: [https://openid.net/specs/openid4vc-high-assurance-interoperability-profile-1_0-ID1.html](https://openid.net/specs/openid4vc-high-assurance-interoperability-profile-1_0-ID1.html)  (Accessed: 24 November 2025)
+[2]	OpenID Foundation (2025) OpenID4VC High Assurance Interoperability Profile 1.0 - Implementers Draft 1. OpenID Foundation. Available at: [https://openid.net/specs/openid4vc-high-assurance-interoperability-profile-1_0-ID1.html](https://openid.net/specs/openid4vc-high-assurance-interoperability-profile-1_0-ID1.html)  (Accessed: 24 November 2025)
 
 [3] IETF (2025) SD‑JWT‑based Verifiable Credentials. IETF. Available at: https://www.ietf.org/archive/id/draft-ietf-oauth-sd-jwt-vc-09.html (Accessed: 24 November 2025).
 
@@ -692,3 +781,5 @@ Profiles may define additional constraints for specific WE BUILD credential type
 [7] WE BUILD (2026) Conformance Specification CS-04: Individual Wallet Unit Attestation (WUA) Lifecycle. webuild-consortium/wp4-architecture.
 
 [8] IETF (2023) RFC 9449: OAuth 2.0 Demonstrating Proof of Possession (DPoP). Available at: [https://www.rfc-editor.org/rfc/rfc9449](https://www.rfc-editor.org/rfc/rfc9449) (Accessed: 5 June 2026).
+
+[9] European Digital Identity Cooperation Group (2025) The European Digital Identity Wallet Architecture and Reference Framework, Discussion Paper for Topic B: Re-issuance and batch issuance of PIDs and Attestations, version 0.9, 17 February. Available at: [https://github.com/eu-digital-identity-wallet/eudi-doc-architecture-and-reference-framework/blob/v2.9.0/docs/discussion-topics/b-re-issuance-and-batch-issuance-of-pids-and-attestations.md](https://github.com/eu-digital-identity-wallet/eudi-doc-architecture-and-reference-framework/blob/v2.9.0/docs/discussion-topics/b-re-issuance-and-batch-issuance-of-pids-and-attestations.md) (Accessed: 10 July 2026).
