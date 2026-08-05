@@ -17,7 +17,7 @@ The Architecture group define the CS, with help from all implementing participan
 
 Conformance Specifications (CS) progress through the following process towards the Large Scale Pilots (LSPs):
 
-![CS Process and Roles](https://github.com/webuild-consortium/wp4-architecture/blob/main/images/WPRoles.png)
+![CS Process and Roles](../images/WPRoles.png)
 
 ## Approved CSs
 
