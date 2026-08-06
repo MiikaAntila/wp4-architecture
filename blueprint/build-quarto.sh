@@ -24,6 +24,7 @@ export CHROME_DEVEL_SANDBOX=$(realpath -m chrome/linux-145.0.7632.46/chrome-linu
 
 if [ "$1" == "--github-action" ]; then
     setup
+    shift
 fi
 
 . .venv/bin/activate
