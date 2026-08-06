@@ -10,7 +10,7 @@ Date: 05-August-2026
 - George Padayatti, iGrant.io, Sweden
 - Nikolaos Triantafyllou, University of the Aegean, Greece
 
-# Table of Contents
+## Table of Contents
 
 - [WE BUILD - Conformance Specification CS-05: Business Wallet Unit Attestation (BWUA) Lifecycle](#we-build---conformance-specification-cs-05-business-wallet-unit-attestation-bwua-lifecycle)
 - [Table of Contents](#table-of-contents)

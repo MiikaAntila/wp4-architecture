@@ -17,9 +17,9 @@ Date: 03 August 2026
 * Nikolaos Triantafyllou, University of Aegean, Greece
 * Malin Norlander, Bolagsverket, Sweden
 * Tomasz Blachowicz, Mastercard, Poland
-* George Fourtounis, Grnet, Greece
+* George Fourtounis, GRNET, Greece
 
-Table Of Contents
+## Table Of Contents
 
 - [WE BUILD - Conformance Specification:  Credential Issuance](#we-build---conformance-specification--credential-issuance)
 - [1. Introduction](#1-introduction)
