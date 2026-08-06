@@ -11,7 +11,7 @@ Date: 30 April 2026
 * Nikolaos Triantafyllou, University of Aegean, Greece
 * Malin Norlander, Bolagsverket, Sweden
 
-Table Of Contents
+## Table Of Contents
 
 - [WE BUILD - Conformance Specification:  Credential Presentation](#we-build---conformance-specification--credential-presentation)
 - [1. Introduction](#1-introduction)

@@ -19,7 +19,7 @@ Date: 03 August 2026
 * Tomasz Blachowicz, Mastercard, Poland
 * George Fourtounis, GRNET, Greece
 
-Table Of Contents
+## Table Of Contents
 
 - [WE BUILD - Conformance Specification:  Credential Issuance](#we-build---conformance-specification--credential-issuance)
 - [1. Introduction](#1-introduction)

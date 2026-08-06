@@ -25,6 +25,7 @@ HEADINGS = [
     "appendix-trust-ecosystem.qmd",
     "appendix-qtsp.qmd",
 ]
+REFS = []
 
 def include(blueprint_qmd, qmd: str, indent: int = 1):
     blueprint_qmd.write("::: {.shift-headings by=" + str(indent) + "}\n")
@@ -45,7 +46,7 @@ def generate_qmd(md: str, numbered: bool) -> str:
             if not numbered:
                 tags.add(".unnumbered")
             if tags:
-                lines[i] = lines[i][:-1] + " {" + " ".join(tags) + "}\n"
+                lines[i] = line[:-1] + " {" + " ".join(tags) + "}\n"
     with open(qmd, "w") as qmd_file:
         for line in lines:
             # Fix Mermaid syntax for Quarto
@@ -62,7 +63,7 @@ def get_indexed_mds(index_file: str) -> list[str]:
             if "BEGIN INDEX" in line:
                 index_found = True
             elif "END INDEX" in line:
-                break
+                index_found = False
             elif index_found and "(" in line and ".md)" in line:
                 md = line[line.rfind("(") + 1:line.rfind(".md)") + 3]
                 mds.append(md)
@@ -84,14 +85,17 @@ def generate_adr_appendix():
 
 def generate_cs_appendix():
     print("Generating CS appendix...")
-    generate_qmd("appendix-cs.md", numbered=True)
     base_path = "../conformance-specs/"
-    cs_mds = get_indexed_mds(base_path + "README.md")
-    with open("appendix-cs.qmd", "a") as cs_appendix_qmd:
-        for cs_md in cs_mds:
+    shutil.copy(base_path + "README.md", "appendix-cs.md")
+    generate_qmd("appendix-cs.md", numbered=True)
+    cs_mds = get_indexed_mds("appendix-cs.md")
+    for cs_md in cs_mds:
+        if cs_md.startswith("cs-"):
             print("Found CS:", cs_md)
             shutil.copy(base_path + cs_md, cs_md)
-            include(cs_appendix_qmd, generate_qmd(cs_md, numbered=True), indent=1)
+            REFS.append(generate_qmd(cs_md, numbered=False))
+        else:
+            print("Not a CS:", cs_md)
     print()
 
 
@@ -159,11 +163,11 @@ def main():
     generate_qtsp_appendix()
 
     if len(sys.argv) > 1 and "html" in sys.argv or "pdf" in sys.argv or "docx" in sys.argv:
-        subprocess.run(["quarto", "render", *HEADINGS, "--to", sys.argv[1]])
+        subprocess.run(["quarto", "render", *HEADINGS, *REFS, "--to", sys.argv[1]])
     else:
-        subprocess.run(["quarto", "render", *HEADINGS, "--to", "html"])
-        # subprocess.run(["quarto", "render", *HEADINGS, "--no-clean", "--to", "pdf"])
-        subprocess.run(["quarto", "render", *HEADINGS, "--no-clean", "--to", "docx"])
+        subprocess.run(["quarto", "render", *HEADINGS, *REFS, "--to", "html"])
+        # subprocess.run(["quarto", "render", *HEADINGS, *REFS, "--no-clean", "--to", "pdf"])
+        subprocess.run(["quarto", "render", *HEADINGS, *REFS, "--no-clean", "--to", "docx"])
     # Make permissions generic so that builds can work outside Docker
     subprocess.run(["chmod", "-R", "agu+w", "_site", ".quarto"])
 

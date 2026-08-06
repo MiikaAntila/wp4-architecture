@@ -7,7 +7,7 @@ Date: 4 July 2026
 
 * Leif Johansson <leifj@siros.org>
 
-Table Of Contents
+## Table Of Contents
 
 - [1. Introduction](#1-introduction)
 - [2. Scope](#2-scope)
