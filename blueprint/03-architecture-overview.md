@@ -16,6 +16,7 @@ The EUDI Wallet and EBW ecosystem follows the common three-party attestation mod
 4. **Trust framework** – the infrastructure used to validate trust relationships between ecosystem participants (described in Chapter 6).
 
 ## System Landscape
+
 The diagram below illustrates the baseline trust topology of the EU wallet ecosystem. Issuers provide attestations to holders, holders present them to verifiers, and all actors validate trust relationships using the trusted lists.
 The trusted lists specify the recognised participants in schemes for electronic identification and trust services.
 
@@ -47,8 +48,10 @@ Accordingly, interactions between data senders and receipients may be routed thr
 The QTSP is recognised in a scheme for trust services, just like in the previous diagram, enabling other participants to verify QERDS evidence issued by the QTSP.
 The WE BUILD Digital Directory (simulating the European Digital Directory) provides economic and public sector bodies with digital addressing for secure routing of documents and notifications.
 
-While this model can apply to any data transmission, the senders, recipients and their QERDS providers can take the issuer-holder-verifier roles as illustrated as above.
-The QERDS provides an additional layer in the WE BUILD ecosystem:
+QERDS is a payload-agnostic transport; within WE BUILD, its application focuses on document submissions and notifications.
+
+While this model can apply to any data transmission, the application of QERDS in WE BUILD focuses on document submissions and notifications.
+The QERDS provides an additional interaction model in the WE BUILD ecosystem, complementary to the issuer-holder-verifier model above:
 
 ```mermaid
 %% WE BUILD additional trust topology with the QERDS and the European Digital Directory
@@ -57,11 +60,13 @@ graph TB
     TL["WE BUILD<br>Trusted Lists"]
     subgraph Users[Wallet users]
       direction LR
-      Sender
-      Recipient
+      SenderBW["Business<br>Wallet"]
+      RecipientBW["Business<br>Wallet"]
+      Sender-->|"uses"|SenderBW
+      RecipientBW-->|"is used by"|Recipient
     end
-    Sender-->|"submits documents using the QERDS to"|Recipient
-    Sender-->|"uses the QERDS to notify"|Recipient
+    SenderBW-->|"submits documents using the QERDS to"|RecipientBW
+    SenderBW-->|"uses the QERDS to notify"|RecipientBW
     Users-->|"discover wallet services and capabilities using"|Directory
     Users-->|"validate QERDS evidence against"|TL
 
@@ -72,8 +77,11 @@ graph TB
 
     class Users group
     class Sender,Recipient primaryRole
+    class SenderBW,RecipientBW component
     class Directory,TL governance
 ```
+
+The ecosystem supports both interaction patterns for exchanging data: delivery with evidence, implemented by the QERDS, and holder-mediated presentation, following the issuer-holder-verifier model. The two compose: artefacts from either pattern can be carried or referenced over either channel where a use case requires it.
 
 ## Wallet Types in WE BUILD 
 
