@@ -94,22 +94,6 @@ graph TB
     class EBW businessWallet
 ```
 
-## Key terminology
-
-| Term | Meaning (simplified; see Article 3 for the legal definitions) |
-|---|---|
-| Wallet owner | The economic operator or public sector body that owns or has a right of use of the wallet and is accountable for its actions. (Article 3(7)) |
-| Wallet user | A natural or legal person that uses the wallet (directly or via software). (Article 3(22)) |
-| Authorised representative | A person acting on behalf of the owner on the basis of an authorisation granted by the owner. (Used descriptively in Articles 4, 7(6)(c) and 10(4)) |
-| Authorisation | A technical right or permission, granted by the owner to a user, to perform specified actions on specified resources, plus the access-control decision that permits each concrete request. Replaces concept of mandate in the EUBW proposal. (Article 3(19)) |
-| EBW-OID | Owner identification data: at least the official name and the unique identifier, issued as an electronic attestation of attributes. (Article 8(3))|
-| Unique identifier | The European Unique Identifier (EUID) where the owner has one; otherwise a similar identifier created under the Regulation. (Article 9(1,2,3)) |
-| Wallet solution / wallet unit | The provider's overall product / the specific configuration of it provided to one owner. (Article 3(25, 26)) |
-| Wallet unit attestation | A data object that describes the components of a wallet unit and allows their authentication and validation. (Article 3(24)) |
-| Relying party | A natural person, economic operator or public sector body that relies upon European Business Wallets. (Article 3(23)) |
-| Provider of EBW-OID | A qualified trust service provider, a public sector body responsible for an authentic source, or the Commission (for Union entities). |
-| Critical assets | Assets within or in relation to a wallet unit whose compromise would have a very serious, debilitating effect on the ability to rely on that unit (Article 3(27)). |
-
 # Legal effect: the principle of equivalence
 
 The Regulation establishes a **principle of equivalence** (Article 1(2), Article 4, Recitals 6 and 19):
