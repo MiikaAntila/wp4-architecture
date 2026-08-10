@@ -10,17 +10,6 @@ This document sets out a non-technical working definition of "business wallet" a
 
 This document draws on the EUDI Wallet regulations, EWC deliverables [\[6\]](#references), and relevant industry and consortium publications. Its main legal reference is the text of the proposed Regulation on the establishment of European Business Wallets as agreed in the Council’s general approach of 9 June 2026, published as Council document 10346/26 [\[2\]](#references), read together with the original Commission proposal COM(2025) 838 [\[1\]](#references) and the European Parliament ITRE rapporteur’s draft report [\[3\]](#references).
 
-## Legislative status
-
-The Regulation is still in negotiation and every statement in this document may change:
-
-- The Commission adopted the proposal, COM(2025) 838, on 19 November 2025.
-- The Council adopted its negotiating position (general approach) at the TTE (Telecommunications) Council on 9 June 2026. The agreed text is published as Council document 10346/26 [\[2\]](#references).
-- The European Parliament has not yet adopted its position. The ITRE rapporteur's draft report PE785.244 was published on 20 March 2026, followed by further committee amendments and opinions from IMCO and JURI. Statements in this document that come from the Parliament side are marked as EP proposals.
-- Negotiations between the institutions (trilogues) are expected next. The Council Presidency has stated a target of political agreement by the end of 2026.
-
-Where this document cites Articles, Recitals or the Annex without further qualification, it refers to the Council general approach text.
-
 # Purpose of the European Business Wallet
 
 The European Business Wallet (EBW) is a digital tool for economic operators — companies, organisations, self-employed persons, sole traders and other entities conducting economic activity — to interact with public sector bodies when meeting reporting obligations and fulfilling administrative procedures, and to reuse the same trusted functions in business-to-business settings (Recital 6). Its purpose is to:

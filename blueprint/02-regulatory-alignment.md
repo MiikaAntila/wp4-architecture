@@ -56,6 +56,13 @@ In addition to the aforementioned standardisation organisations, the [European C
 
 The EBW framework is introduced through the European Commission’s [Digital Package proposal](https://digital-strategy.ec.europa.eu/en/news/simpler-eu-digital-rules-and-new-digital-wallets-save-billions-businesses-and-boost-innovation) as part of its 2025 Work Programme. The proposal aims to establish the EBW as a harmonised digital solution that reduces administrative burden and allows companies and public authorities to identify, authenticate and exchange data with legal effect across the European Union.
 
+While the proposal is still in negotiation, every statement in this document may still change in the future. Below is the current history of the proposal we are building on:
+
+- The Commission adopted the proposal, COM(2025) 838, on 19 November 2025.
+- The Council adopted its negotiating position (general approach) at the TTE (Telecommunications) Council on 9 June 2026.
+- The European Parliament has not yet adopted its position. The ITRE rapporteur's draft report PE785.244 was published on 20 March 2026, followed by further committee amendments and opinions from IMCO and JURI.
+- Negotiations between the institutions (trilogues) are expected next. The Council Presidency has stated a target of political agreement by the end of 2026.
+
 The EBW framework complements the EUDI framework by addressing the needs of economic operators and public authorities. It supports the digital management of representation rights and mandates, provides a secure channel for exchanging official documents and attestations, and includes support for a common directory. Interoperability with the EUDI Wallet is a core requirement.
 
 The proposal supports the management and use of EAA, including owner identification data with selective disclosure. It defines requirements for authenticating owners and authorised users through (Q)EAAs and enables links between EAAs and other attestations. Access to EAAs by relying parties requires proper authorisation.
