@@ -52,16 +52,12 @@ On terminology: the Commission proposal used the term "mandate" for the permissi
 
 ## Relationship with the EUDI Wallet
 
-The EBW builds on and complements the European Digital Identity Framework (Regulation (EU) No 910/2014 as amended by Regulation (EU) 2024/1183):
+The EBW builds on and complements the European Digital Identity Framework:
 
-- The proposal amends Article 5a of the eIDAS Regulation so that the mandatory issuance of European Digital Identity Wallets applies to **natural persons only** (Article 20). The EBW becomes the intended solution for legal persons and other economic operators.
-- **EUDI Wallets, notified eID means and electronic attestations of attributes can be used to onboard the owner and to authenticate wallet users** (Recital 25, Annex point 1). The natural person who enrols the owner (a legal representative or other lawfully empowered person) identifies with an eID means at level of assurance "high" (Article 6(1)(e)).
-- **Self-employed persons and sole traders** do not need to create a separate business identity: providers must offer the wallet's secure communication channel (QERDS) as a standalone service that these persons can use with their EUDI Wallet in a business capacity (Article 5(3)), at reasonable and affordable prices (Recital 12).
-- The EP rapporteur adds, at recital level, that the use of EUDI Wallets should be **enabled but not required**, and that individual and business use should remain distinguishable. This is an architectural direction rather than an operative rule (ITRE draft report).
-
-Interoperability with the EUDI ecosystem is a design principle: the technical specifications of the eIDAS framework, its implementing regulations and the Architecture and Reference Framework apply where appropriate, with the EBW Regulation taking precedence in the event of inconsistency (Recital 4).
-
-Note: The ARF is not law; Recital 4 refers to it as part of the work carried out on the basis of Recommendation (EU) 2021/946 and gives it a "where appropriate" status only, and recitals are not operative provisions. Recital 29 likewise invites the implementing acts to build on ARF standards without making them binding. Recital 5 adds that implementation should, where appropriate, reuse existing EU building blocks, including the Once Only Technical System, BRIS and the EUDI Wallet.
+- The proposal amends Article 5a of the eIDAS Regulation so that the mandatory issuance of European Digital Identity Wallets applies to **natural persons only**. The EBW becomes the intended solution for legal persons and other economic operators.
+- **EUDI Wallets, notified eID means and electronic attestations of attributes can be used to onboard the owner and to authenticate wallet users**. The natural person who enrols the owner (a legal representative or other lawfully empowered person) identifies with an eID means at level of assurance "high"/
+- **Self-employed persons and sole traders** do not need to create a separate business identity: providers must offer the wallet's secure communication channel (QERDS) as a standalone service that these persons can use with their EUDI Wallet in a business capacity, at reasonable and affordable prices.
+- The EP rapporteur adds, at recital level, that the use of EUDI Wallets should be **enabled but not required**, and that individual and business use should remain distinguishable. This is an architectural direction rather than an operative rule.
 
 ## Conceptual model
 
