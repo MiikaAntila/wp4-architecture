@@ -77,3 +77,19 @@ From a technical perspective, the framework promotes the use of common protocols
 
 Within WE BUILD, the proposed EBW framework is treated as a primary regulatory and architectural reference for business-focused identity and data exchange scenarios. Use case design and pilot activities align with the EBW model’s legal structure, interoperability requirements and trust-service framework, while taking forthcoming implementing acts into account.
 
+### The principle of equivalence
+
+The Regulation establishes a **principle of equivalence**:
+
+> Where a wallet owner or authorised wallet user makes use of any of the qualified trust services forming part of core functionalities of a European Business Wallet referred to in Article 5(1), the resulting action has the same legal effect as if the action had been lawfully carried out in person, in paper form, or via any other means or processes compliant with applicable legal, administrative or procedural requirements.
+
+The same applies where a self-employed person or sole trader uses the QERDS secure communication channel as a standalone service.
+
+The principle has clear limits:
+
+- It applies only to actions resulting from the use of core functionalities that are **functionally equivalent** to their traditional counterparts and serve the same purpose — for example qualified electronic signatures, seals and attestations of attributes. Council general approach specifies that the principle related only to **qualified trust services forming part of core functionalities** of the wallet.
+- **National procedural requirements still apply.** Additional safeguards or verifications that are part of an administrative procedure and are not supported by the wallet's core functionalities must still be fulfilled.
+- **Requirements on electronic formats remain applicable.** Where EU or national law requires an administrative step or a document in a particular electronic form, that requirement is observed.
+- At the same time, such requirements may not be applied in a way that excludes the use of the wallet's core functionalities **solely because of their digital nature**.
+
+Related principles: information validly transmitted via an EBW should not have to be submitted again through physical or alternative digital means, and vice versa; the Regulation is without prejudice to the once-only right of legal persons and to existing systems for exchanges between competent authorities; and Member States should not add national requirements on matters within the Regulation's scope.

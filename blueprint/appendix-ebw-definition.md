@@ -94,25 +94,6 @@ graph TB
     class EBW businessWallet
 ```
 
-# Legal effect: the principle of equivalence
-
-The Regulation establishes a **principle of equivalence** (Article 1(2), Article 4, Recitals 6 and 19):
-
-> Where a wallet owner or authorised wallet user makes use of any of the qualified trust services forming part of core functionalities of a European Business Wallet referred to in Article 5(1), the resulting action has the same legal effect as if the action had been lawfully carried out in person, in paper form, or via any other means or processes compliant with applicable legal, administrative or procedural requirements.
-
-The same applies where a self-employed person or sole trader uses the QERDS secure communication channel as a standalone service (Article 4, second paragraph).
-
-The principle has clear limits:
-
-- It applies only to actions resulting from the use of core functionalities that are **functionally equivalent** to their traditional counterparts and serve the same purpose — for example qualified electronic signatures, seals and attestations of attributes (Recital 6). Council general approach specifies that the principle related only to **qualified trust services forming part of core functionalities** of the wallet. (Article 4)
-- **National procedural requirements still apply.** Additional safeguards or verifications that are part of an administrative procedure and are not supported by the wallet's core functionalities must still be fulfilled (Recital 6, Article 4, third paragraph).
-- **Requirements on electronic formats remain applicable.** Where EU or national law requires an administrative step or a document in a particular electronic form, that requirement is observed (Article 4, third paragraph).
-- At the same time, such requirements may not be applied in a way that excludes the use of the wallet's core functionalities **solely because of their digital nature** (Recital 6).
-
-Related principles: information validly transmitted via an EBW should not have to be submitted again through physical or alternative digital means, and vice versa (Recital 51); the Regulation is without prejudice to the once-only right of legal persons and to existing systems for exchanges between competent authorities (Recital 10, Article 2(2)); and Member States should not add national requirements on matters within the Regulation's scope (Recital 51).
-
-Note (EP position): the ITRE rapporteur proposes to tie the equivalence principle explicitly and only to core functionality **based on qualified trust services**. This narrows which parts of an EBW transaction benefit from the special equivalence rule; it does not mean that other actions have no legal or evidentiary effect under general law.
-
 # Business Wallet definition
 
 ## Roles supported
