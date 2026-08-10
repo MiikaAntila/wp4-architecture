@@ -12,16 +12,12 @@ This document draws on the EUDI Wallet regulations, EWC deliverables [\[6\]](#re
 
 # Purpose of the European Business Wallet
 
-The European Business Wallet (EBW) is a digital tool for economic operators — companies, organisations, self-employed persons, sole traders and other entities conducting economic activity — to interact with public sector bodies when meeting reporting obligations and fulfilling administrative procedures, and to reuse the same trusted functions in business-to-business settings (Recital 6). Its purpose is to:
+The European Business Wallet (EBW) is a digital tool for economic operators — companies, organisations, self-employed persons, sole traders and other entities conducting economic activity — to interact with public sector bodies when meeting reporting obligations and fulfilling administrative procedures, and to reuse the same trusted functions in business-to-business settings. Its purpose is to:
 
 - reduce administrative burdens and compliance costs by replacing paper-based and fragmented digital processes;
 - give economic operators and public sector bodies secure and trusted digital identification across borders;
 - enable digital management of representation rights and authorisations; and
-- provide a secure channel for exchanging official documents, attestations and legally valid notifications, supported by a common directory (Article 1).
-
-Use of an EBW is voluntary for economic operators. Public sector bodies, including Union entities, will be obliged to enable its use in relevant administrative procedures (Article 16).
-
-Scope carve-outs. The Regulation is without prejudice to actions taken by Member States for public order, public security and defence purposes (Article 2(2a)), to the procedural autonomy and judicial independence of national justice systems (Recital 8), and to Member State responsibility for national security (Recital 9). It is also without prejudice to existing systems and procedures for the exchange of documents and data between competent authorities (Article 2(2)).
+- provide a secure channel for exchanging official documents, attestations and legally valid notifications, supported by a common directory.
 
 # Core concepts
 
