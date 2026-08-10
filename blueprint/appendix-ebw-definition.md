@@ -96,22 +96,11 @@ graph TB
 
 # Business Wallet definition
 
-## Roles supported
-
 A business wallet enables its owner, amongst other operations, to act as:
 
 - Issuer, holder or verifier of electronic attestations of attributes
 - Signatory or origin of sealed data
 - Sender or recipient of messages, such as submissions and notifications
-
-These operations are under role-based access control, where recognised roles comprise (as roles, not stated directly by Regulation):
-- Wallet owner: the entity that is accountable for the legal consequences of the operation
-- Authorised representative: a wallet user with an authorisation to act on behalf of the wallet owner, potentially with a limited scope or in limited contexts
-In addition, the wallet owner may configure other roles that suit the owner's policies and/or national or EU law.
-Other relevant roles are:
-- Wallet provider: the entity that provides the business wallet solution to its owner (potentially the owner themselves); only providers included in the Commission's list of authorised providers may provide EBWs
-- Owner identification data provider: the entity that verifies the identity of an authorised representative enrolling the wallet owner and attests, using an electronic attestation of attributes, the wallet owner's identification data in accordance with authentic source registrations
-- Relying party: any party that relies on the wallet, for example a public sector body receiving a submission or a business partner verifying an attestation
 
 ## Types of requirements
 
