@@ -2,7 +2,7 @@
 
 **Authors:**
 
-- Miika Antila & TAX FI project team, Finnish Tax Administration, Finland
+- Miika Antila, Finnish Tax Administration, Finland
 
 ## Context
 
@@ -19,7 +19,8 @@ Within the scope of the WE BUILD consortium architecture, the European Business 
 Accordingly, within the WE BUILD consortium, the EBW is assumed to support: 
 - Organisational identity representation 
 - Mandates, delegations, and representation rights 
-- Trust anchors and verifiable attestations issuance and verification 
+- Resolution of and validation against published Trusted Lists and trust anchors
+- Issuance, presentation, and verification of electronic attestations of attributes
 - Presentation of legally signed or sealed artefacts as evidentiary objects
 - Trust-based interactions requiring legal assurance, such as proof of delivery or receipt (e.g. via QERDS)
 
@@ -28,9 +29,9 @@ The EBW is intended to support interactions where identity, trust, or verifiabil
 Within the WE BUILD consortium architectural scope, the EBW is not assumed to: 
 - Act as a system of record for operational business data 
 - Orchestrate or execute business processes 
-- Act as a general-purpose system integration or data exchange channel (e.g. ERP‑to‑ERP or CRM‑to‑CRM)
+- Act as a general-purpose enterprise integration platform or primary channel for operational business data exchange (e.g. ERP-to-ERP or CRM-to-CRM)
 
-Transactional business data and operational workflows are assumed to remain within existing enterprise systems and their established integrations. 
+Transactional business data and operational workflows are assumed to remain primarily within business systems and their established integrations where applicable.
 
 This decision represents an architectural scoping assumption specific to the WE BUILD consortium. It does not constitute a policy‑level interpretation of the EBW, nor does it restrict how the EBW may be used or implemented outside the WE BUILD consortium context. 
 
@@ -40,7 +41,7 @@ This architectural scoping is motivated by the following considerations:
 - **Alignment with enterprise realities:** Core business data and processes are already managed within mature enterprise systems that serve as authoritative sources of truth. 
 - **Clear architectural layering:** Separating trust and identity infrastructure from transactional and process execution layers improves clarity, composability, and long‑term maintainability. 
 - **Avoidance of parallel sources of truth:** Treating the EBW as a business system risks duplicating responsibilities already fulfilled elsewhere. 
-- **Reduced integration complexity:** Limiting EBW integration to trust‑related concerns lowers coupling and interoperability risk. 
+- **Reduced integration complexity:** Focusing EBW integration on trust-related concerns keeps coupling low and reduces interoperability risk. 
 
 The purpose of this scoping is to clarify the architectural assumptions under which components are designed and evaluated, not to constrain the evolution of the EBW beyond this scope. 
 
