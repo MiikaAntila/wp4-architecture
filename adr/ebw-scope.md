@@ -52,10 +52,6 @@ The purpose of this scoping is to clarify the architectural assumptions under wh
 - Consistent interpretation across WE BUILD consortium implementations 
 - Simpler, trust‑focused EBW integrations across the consortium 
 
-**Trade‑offs**
-- WE BUILD consortium use cases envisioning a single end‑to‑end business interaction channel may partially fall outside this architectural scope 
-- Such scenarios may require complementary components or architectural layers not addressed by this decision 
-
 **Trade-offs**
 - Use cases envisioning the EBW as a single end-to-end business interaction channel need to be explicit about where document exchange and process execution sit, which may involve components outside this ADR
 - Introducing trust services into existing integrations adds coordination cost between wallet providers and enterprise system owners
@@ -63,6 +59,7 @@ The purpose of this scoping is to clarify the architectural assumptions under wh
 **Risk treatment**
 - WP4 Architecture, with the WP3 Use Case Sync Leads, checks the WE BUILD use cases against this scoping and records any that do not fit, so gaps surface as issues rather than as divergent local interpretations
 - The Blueprint Coordination Group confirms that Appendix D, the glossary, Chapter 1 and Chapter 4 read consistently with this ADR once merged
+  
 **Open points**
 - A worked mapping of the WE BUILD use cases onto this scoping, to be contributed by the authors together with the WP3 Use Case Sync Leads
 - Blueprint consistency check as set out under Risk treatment above
