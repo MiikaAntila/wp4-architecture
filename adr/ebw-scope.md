@@ -6,7 +6,7 @@
 
 ## Context
 
-The European Business Wallet (EBW) is described at EU level with a broad functional scope. At the same time, enterprises typically operate established system landscapes where operational business data and business processes are managed in ERP, financial, CRM, and domain‑specific systems, while identity, mandates, and trust are handled as cross‑cutting infrastructure concerns. 
+The European Business Wallet (EBW) is described at EU level with a broad functional scope. In reality, economic operators and public sector bodies alike sit within heterogeneous system landscapes of varying digital maturity, from spreadsheets to full ERP, on-premise or cloud-hosted, and in part supplied by the public sector (e.g. tax-reporting tools), in which operational business data and processes are already handled, while identity, mandates, and trust are cross-cutting infrastructure concerns.
 
 Within the WE BUILD consortium, the EBW is referenced across architectures, diagrams, and use cases. However, the assumed architectural role of the EBW within the WE BUILD consortium architecture has not yet been explicitly scoped, creating a risk of differing interpretations when defining interfaces, responsibilities, and integration scope across consortium participants. 
 
@@ -54,11 +54,17 @@ The purpose of this scoping is to clarify the architectural assumptions under wh
 **Trade‑offs**
 - WE BUILD consortium use cases envisioning a single end‑to‑end business interaction channel may partially fall outside this architectural scope 
 - Such scenarios may require complementary components or architectural layers not addressed by this decision 
- 
-**Open Questions**
-- Is this EBW scoping aligned with the WE BUILD consortium use cases and requirements? 
-- Should this assumption be adopted as a stable architectural baseline for the consortium? 
-- Are explicit deviations required for specific WE BUILD consortium use cases? 
+
+**Trade-offs**
+- Use cases envisioning the EBW as a single end-to-end business interaction channel need to be explicit about where document exchange and process execution sit, which may involve components outside this ADR
+- Introducing trust services into existing integrations adds coordination cost between wallet providers and enterprise system owners
+
+**Risk treatment**
+- WP4 Architecture, with the WP3 Use Case Sync Leads, checks the WE BUILD use cases against this scoping and records any that do not fit, so gaps surface as issues rather than as divergent local interpretations
+- The Blueprint Coordination Group confirms that Appendix D, the glossary, Chapter 1 and Chapter 4 read consistently with this ADR once merged
+**Open points**
+- A worked mapping of the WE BUILD use cases onto this scoping, to be contributed by the authors together with the WP3 Use Case Sync Leads
+- Blueprint consistency check as set out under Risk treatment above
 
 ## Advice
 
