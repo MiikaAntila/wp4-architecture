@@ -24,7 +24,7 @@ Accordingly, within the WE BUILD consortium, the EBW is assumed to support:
 - Presentation of legally signed or sealed artefacts as evidentiary objects
 - Trust-based interactions requiring legal assurance, such as proof of delivery or receipt (e.g. via QERDS)
 
-The EBW is intended to support interactions where identity, trust, or verifiability are the primary purpose of the interaction, rather than merely supporting general business data exchange.
+The EBW is intended to support interactions in which identity, trust, verifiability, or legally assured delivery is central. When business documents are exchanged, they may continue to be conveyed via established document-exchange infrastructure and remain authoritative at their source.
 
 Within the WE BUILD consortium architectural scope, the EBW is not assumed to: 
 - Act as a system of record for operational business data 
