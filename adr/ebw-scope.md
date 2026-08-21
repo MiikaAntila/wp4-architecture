@@ -12,28 +12,22 @@ Within the WE BUILD consortium, the EBW is referenced across architectures, diag
 
 This ADR documents an explicit architectural scoping assumption for the WE BUILD consortium, in order to support a shared understanding of how the EBW is treated within this architecture. It does not aim to define or constrain the EBW beyond the scope of the WE BUILD consortium. 
 
+The EBW is intended to support interactions in which identity, trust, verifiability, or legally assured delivery is central. Business documents are exchanged via secure communication channel or other established document exchange infrastructures and remain authoritative at their source.
+
 ## Decision
 
-Within the scope of the WE BUILD consortium architecture, the European Business Wallet is assumed to function primarily as **a set of standardised identity, trust, and authorisation services**, used by enterprise systems to participate in trust-based interactions within the broader trust infrastructure, rather than as an operational business system or as an ERP‑level data exchange platform. This may include limited issuer capabilities for mandates, delegations, or other trust-related attestations within an organisation’s own trust domain, where such issuance is anchored in the broader trust infrastructure. Within this architecture, the EBW serves as an entry and anchoring point into a broader trust infrastructure, rather than constituting the trust layer itself. 
+Within the scope of the WE BUILD consortium architecture, the European Business Wallet is assumed to function primarily as **a set of standardised identity, trust, and authorisation services**. These capabilities may be consumed by various business applications, organisational processes, and digital services, independent of any specific system type. The wallet may also provide limited issuer capabilities for mandates, delegations, and other trust-related attestations within an organisation's trust domain. Within this architecture, the EBW serves as an entry and anchoring point into a broader trust infrastructure, rather than constituting the trust layer itself. 
 
 Accordingly, within the WE BUILD consortium, the EBW is assumed to support: 
 - Organisational identity representation 
-- Mandates, delegations, and representation rights 
-- Resolution of and validation against published Trusted Lists and trust anchors
-- Issuance, presentation, and verification of electronic attestations of attributes
-- Presentation of legally signed or sealed artefacts as evidentiary objects
-- Trust-based interactions requiring legal assurance, such as proof of delivery or receipt (e.g. via QERDS)
-
-The EBW is intended to support interactions in which identity, trust, verifiability, or legally assured delivery is central. When business documents are exchanged, they may continue to be conveyed via established document-exchange infrastructure and remain authoritative at their source.
-
-Within the WE BUILD consortium architectural scope, the EBW is not assumed to: 
-- Act as a system of record for operational business data 
-- Orchestrate or execute business processes 
-- Act as a general-purpose enterprise integration platform or primary channel for operational business data exchange (e.g. ERP-to-ERP or CRM-to-CRM)
+- Operational authorisations and technical access management 
+- Issuance of electronic attestations of attributes
+- Presentation of electronic attestations of attributes
+- Verification and validation of electronic attestations of attributes
+- Presentation of legally signed or sealed documents and evidentiary objects
+- Support for trust-based interactions requiring legal assurance, such as proof of delivery or receipt (e.g. via QERDS)
 
 Transactional business data and operational workflows are assumed to remain primarily within business systems and their established integrations where applicable.
-
-This decision represents an architectural scoping assumption specific to the WE BUILD consortium. It does not constitute a policy‑level interpretation of the EBW, nor does it restrict how the EBW may be used or implemented outside the WE BUILD consortium context. 
 
 ## Rationale
 
