@@ -98,17 +98,19 @@ WE BUILD supports wallet solutions for both natural persons and economic operato
 
 Natural persons interact through EUDI Wallets, which enable individuals to authenticate and present personal identity attributes. Economic operators interact through EBW, which enable organisations to manage and present business-related attestations such as representation rights or organisational attributes.
 
-From a deployment perspective, wallet solutions can be implemented in several ways depending on the target users, operational requirements, and cryptographic architecture. In practice, three main implementation approaches are relevant within the WE BUILD ecosystem.
+From a deployment perspective, wallet solutions can be implemented in several ways depending on the target users, operational requirements, and cryptographic architecture. Three implementation approaches are relevant within the WE BUILD ecosystem, distinguished by where the wallet runs and where its keys are protected.
 
-| Wallet type | Typical context | Characteristics |
+| Wallet type | Where the wallet runs and its keys are protected | Typical context |
 |---|---|---|
-| **Mobile wallets (on-device)** | Natural persons | Wallet application running on a user’s smartphone, with credentials stored and used locally on the device. |
-| **Server or Web-based wallets** | Economic operators | Wallet services operated in backend infrastructure and accessed through Web interfaces or enterprise systems. |
-| **Hybrid wallets** | Both contexts | Combine device-based interaction with backend cryptographic infrastructure. |
+| **On-device** | Wallet Instance on the user's device, with keys protected by a WSCD on that device. | Natural persons, and use cases that require proximity or offline presentation. |
+| **Remote / server-side** | Wallet service operated in backend infrastructure, with keys protected by a server-side WSCD, typically an HSM. | Economic operators, managed services and large-scale deployments. |
+| **Hybrid** | Combines a device WSCD with a server-side WSCD. | Deployments that need both scale and offline capability. |
+
+The user interface is a separate question. The ARF notes that a Wallet Instance can also be a web application, so a browser-based interface can sit on top of any of the three approaches.
 
 The underlying cryptographic architecture of wallets is defined in the ARF and related standards. This Blueprint therefore focuses on the interactions and interoperability patterns relevant for WE BUILD rather than repeating the detailed wallet architecture definitions.
 
-In practice, most deployments follow a mobile-first approach for natural persons and a server-based or enterprise-integrated approach for economic operators. Hybrid architectures may also be used to combine device-based user interaction with backend cryptographic services.
+In practice, most deployments follow a mobile-first approach for natural persons and a server-based or enterprise-integrated approach for economic operators. Hybrid architectures may also be used to combine device-based user interaction with backend cryptographic services. Appendix E sets out the deployment patterns reported by WE BUILD wallet providers.
 
 
 ```mermaid
