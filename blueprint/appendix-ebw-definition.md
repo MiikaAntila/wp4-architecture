@@ -64,6 +64,44 @@ Other relevant roles are:
 - Wallet provider: the entity that provides the business wallet solution to its owner (potentially the owner themselves)
 - Owner identification data provider: the entity that verifies the identity of an authorised representative enrolling the wallet owner and attests, using an electronic attestation of attributes, the wallet owner's identification data in accordance with authentic source registrations
 
+## Architecture overview
+
+![Business wallet architecture overview](../images/ebw-architecture-overview.png)
+*Figure D.1: architecture overview of the European Business Wallet.*
+
+The figure groups the capabilities of a business wallet in five layers, from the interfaces it exposes to the keys and storage at its core, with three concerns that apply across all of them. The business wallet is a set of standardised identity, trust and authorisation services, and an entry point into a broader trust infrastructure rather than that infrastructure itself. Transactional business data and operational workflows stay in the systems that already hold them. Several of these capabilities are described in more detail under Key functions below.
+
+### Interfaces
+
+The wallet exposes its capabilities to the people who operate it and to the systems of the wallet owner. Interaction is user-driven or automated without manual intervention, which is what makes the wallet usable between systems. Counterparties, endpoints and digital addresses can be found through the European Digital Directory.
+
+### Functions supported
+
+These are the operations the owner performs through the wallet, matching the roles set out above. Issuing, holding and verifying concern electronic attestations of attributes. The secure communication channel carries submissions and notifications. Sealing and signing give legal effect. Attestations and data transfer are deliberately kept apart.
+
+- **Issuing.** Attestations are issued into other wallets and can be linked into a verifiable chain.
+- **Holding.** Receiving, storing, selecting, combining and presenting attestations, with selective disclosure so that only the attributes needed for an interaction are shared.
+- **Verifying.** Requesting and validating attestations and owner identification data. Where no person approves each exchange, release follows the automatic approval list the owner controls. Authorising relying parties to request attestations is separate from authorising the wallet's own users.
+- **Secure communication channel.**  Submissions and notifications are transmitted and received over a qualified electronic registered delivery service, which supplies the evidence of sending and receipt. The channel is described under Key functions.
+- **Sealing and signing.** Qualified signatures and seals are created with qualified certificates and a local, external or remote creation device, and qualified time stamps bind data to a point in time. The creation application may come from the wallet provider, a trust service provider or a relying party.
+
+### Trust and credentials
+
+This layer is what the functions rely on. Trust registry consumption and evaluation means resolving trust anchors from published trusted lists and evaluating counterparties against them; the wallet consumes those lists rather than operating them. What a counterparty is entitled to do is established separately, through registration data and relying-party access certificates. Credential catalog and schema management covers the attestation schemes and rulebooks a wallet supports, which determine how an attestation is structured and interpreted. Cryptographic functions and credential format management covers the formats and cryptographic profiles it supports. Status management and revocation let a relying party check whether an attestation is still valid, using the IETF Token Status List.
+
+
+### Identity and access management
+
+The owner is identified by European Business Wallet Owner Identification Data, a stable minimal attribute set cryptographically bound to the wallet. Users authenticate with an electronic identification means before any wallet functionality becomes available. Authorisations granted inside the wallet, whether technical or administrative, do not create, limit or affect any power of attorney or legal mandate. Delegation of authority supports both role-based and service-based models.
+
+### Keys and storage
+
+Keys are generated, protected and used inside a wallet secure cryptographic application and device. Attestations and documents are stored for the owner, and export and import make that data portable between wallet providers.
+
+### Cross-cutting concerns
+
+**Configuration management** holds the policies the owner sets and controls, including the automatic approval list. **Audit logging and transaction history** records transactions with relying parties and other wallets, whether or not they complete, so the owner keeps control and disputes can be resolved. **Lifecycle management** covers enrolment of the owner, the business wallet unit attestation that lets others check the wallet's authenticity and validity, and suspension, revocation and termination.
+
 ## Key functions
 
 ### Wallet lifecycle management
