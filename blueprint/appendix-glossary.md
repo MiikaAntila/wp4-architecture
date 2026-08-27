@@ -51,6 +51,8 @@ While this document avoids abbreviations as much as possible, commonly used abbr
 | **Wallet Provider** | — | An organization that provides a Wallet Solution and manages its lifecycle. |
 | **Wallet Secure Cryptographic Device / Application** | WSCD / WSCA | The hardware or software environment used to manage cryptographic keys securely within the wallet. |
 | **Wallet Solution** | — | A specific implementation of a wallet consisting of a Wallet Application and Wallet Core Component(s). |
+| **Wallet Type** | — | A classification of wallet implementations by where the wallet runs and where its keys are protected. Appendix E describes the three types used in this document: on-device, remote / server-side, and hybrid. |
+| **Wallet Unit** | WU | The deployed wallet controlled by a Wallet User, which presents the Wallet Unit Attestation that describes it. Credentials are bound to keys the Wallet Unit controls in its WSCD / WSCA. CS-04 uses Wallet Unit (WU) for the natural person's wallet; the business counterpart is the Business Wallet Unit (BWU) in CS-05. |
 | **Wallet Unit Attestation** | WUA | A signed information object issued by a Wallet Provider that describes the capabilities and security properties of a Wallet Unit (especially the WSCD/WSCA). It is device-bound and allows PID or Attestation Providers to verify compliance, bind credentials to the unit, and check for revocation. |
 | **Wallet User** | — | The natural or legal person that controls and operates a wallet instance. |
 | **WE BUILD** | — | The consortium and project focused on pioneering the European Business Wallet and EUDI Wallet use cases. |
