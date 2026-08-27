@@ -32,8 +32,10 @@ Propose new ADRs using the [template](_template.md). Announce them to the [Archi
 
 ## Supporting analysis
 
+<!--BEGIN INDEX-->
 - [Attestations, Documents and Data Analysis](build-document-vs-attestation-analysis.md)
 - [EDD Identification, Discovery and Connection Analysis](build-edd-identification-discovery-connection-analysis.md)
+<!--END INDEX-->
 
 ## ADR process for WE BUILD
 

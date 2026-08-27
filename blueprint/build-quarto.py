@@ -72,14 +72,15 @@ def get_indexed_mds(index_file: str) -> list[str]:
 
 def generate_adr_appendix():
     print("Generating ADR appendix...")
-    generate_qmd("appendix-adr.md", numbered=True)
     base_path = "../adr/"
-    adr_mds = get_indexed_mds(base_path + "README.md")
+    shutil.copy(base_path + "README.md", "appendix-adr.md")
+    generate_qmd("appendix-adr.md", numbered=True)
+    adr_mds = get_indexed_mds("appendix-adr.md")
     with open("appendix-adr.qmd", "a") as adr_appendix_qmd:
         for adr_md in adr_mds:
             print("Found ADR:", adr_md)
             shutil.copy(base_path + adr_md, adr_md)
-            include(adr_appendix_qmd, generate_qmd(adr_md, numbered=True), indent=1)
+            REFS.append(generate_qmd(adr_md, numbered=True))
     print()
 
 
