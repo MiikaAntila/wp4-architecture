@@ -11,6 +11,7 @@ While this document avoids abbreviations as much as possible, commonly used abbr
 | **Architectural Decision Record** | ADR | A document used to capture and justify significant technical choices. ADRs serve as the project’s "logbook" to ensure transparency regarding the rationale behind protocol and standard adoption. |
 | **Architecture and Reference Framework** | ARF | The reference architecture for the European Digital Identity Wallet ecosystem published by the European Commission in cooperation with the Member States. It defines roles, trust models, protocols and interoperability requirements for the ecosystem. |
 | **Attestation Rulebook**| - | A document describing the governance, requirements and semantic interpretation of a specific attestation type, including how credential data maps to vocabulary terms and schemas. |
+| **Authorised representative** | - | A person acting on behalf of the owner on the basis of an authorisation granted by the owner. |
 | **Blueprint** | — | The high-level architecture and integration document (D4.1) describing the WE BUILD ecosystem, architectural patterns, interaction flows and governance model. |
 | **Business Wallet Unit Attestation** | BWUA | A specific type of Wallet Unit Attestation issued for a European Business Wallet (EBW) instance. |
 | **EAA Provider** | — | An entity that relies on authentic sources of information to issue attestations to a wallet. |
@@ -43,11 +44,13 @@ While this document avoids abbreviations as much as possible, commonly used abbr
 | **Selective Disclosure JSON Web Token** | SD-JWT | A format allowing holders to share only specific parts of a credential while keeping other data private. |
 | **Trust Framework** | — | The set of governance rules, standards, and trust infrastructure used to establish and verify trust relationships between ecosystem participants. |
 | **Trusted List** | TL | A machine-readable list of trusted service providers or entities used to validate trust relationships within the ecosystem. |
+| **European Unique Identifier** | EUID | The official unique identifier assigned to a wallet owner; or a similar identifier created under the Regulation. |
 | <del>**Verifier**</del> | — | See *Relying Party* instead. |
 | **Wallet Application** | — | The user-facing software component of a Wallet Solution providing the interface for managing credentials. |
 | **Wallet Core Component(s)** | — | The technical module(s) of a Wallet Solution handling cryptographic operations and protocol implementations. |
 | **Wallet Instance** | — | A specific operational instance of a wallet solution running on a device or cloud environment. |
 | **Wallet Instance Attestation** | WIA | A short-lived, signed information object issued by a Wallet Provider that contains information about the Wallet Instance. It is device-bound and presented to PID or Attestation Providers to authenticate the instance, but it does not require a WSCD/WSCA for key management and does not contain revocation information. |
+| **Wallet Owner** | - | The economic operator or public sector body that owns or has a right of use of the wallet and is accountable for its actions. |
 | **Wallet Provider** | — | An organization that provides a Wallet Solution and manages its lifecycle. |
 | **Wallet Secure Cryptographic Device / Application** | WSCD / WSCA | The hardware or software environment used to manage cryptographic keys securely within the wallet. |
 | **Wallet Solution** | — | A specific implementation of a wallet consisting of a Wallet Application and Wallet Core Component(s). |
