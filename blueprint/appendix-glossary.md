@@ -44,7 +44,7 @@ While this document avoids abbreviations as much as possible, commonly used abbr
 | **Selective Disclosure JSON Web Token** | SD-JWT | A format allowing holders to share only specific parts of a credential while keeping other data private. |
 | **Trust Framework** | — | The set of governance rules, standards, and trust infrastructure used to establish and verify trust relationships between ecosystem participants. |
 | **Trusted List** | TL | A machine-readable list of trusted service providers or entities used to validate trust relationships within the ecosystem. |
-| **Unique Identifier** | EUID | The European Unique Identifier where the wallet owner has one; otherwise a similar identifier created under the Regulation. |
+| **European Unique Identifier** | EUID | The official unique identifier assigned to a wallet owner; or a similar identifier created under the Regulation. |
 | <del>**Verifier**</del> | — | See *Relying Party* instead. |
 | **Wallet Application** | — | The user-facing software component of a Wallet Solution providing the interface for managing credentials. |
 | **Wallet Core Component(s)** | — | The technical module(s) of a Wallet Solution handling cryptographic operations and protocol implementations. |
