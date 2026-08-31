@@ -33,7 +33,7 @@ For reference on relying party access certificates and relying party registratio
 
 ### Trust infrastructure architecture (overview)
 
-In the [Appendix - Trust Ecosystem](../appendix-trust-ecosystem.md) there is a diagram that summarises the roles of Member State and European Commission, the split between registration and notification, and how Trusted Lists and the LoTL are produced and consumed. A simplified version used in WE BUILD is shown below.
+In the [Appendix - Trust Ecosystem](./appendix-trust-ecosystem.md) there is a diagram that summarises the roles of Member State and European Commission, the split between registration and notification, and how Trusted Lists and the LoTL are produced and consumed. A simplified version used in WE BUILD is shown below.
 
 ````mermaid
 graph TB
